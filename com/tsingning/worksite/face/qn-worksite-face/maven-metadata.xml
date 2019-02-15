@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.tsingning.worksite.face</groupId>
+  <artifactId>qn-worksite-face</artifactId>
+  <versioning>
+    <versions>
+      <version>1.0.0-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20190215084957</lastUpdated>
+  </versioning>
+</metadata>

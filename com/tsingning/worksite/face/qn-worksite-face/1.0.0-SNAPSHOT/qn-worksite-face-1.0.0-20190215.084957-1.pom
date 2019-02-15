@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.tsingning.worksite.face</groupId>
+    <artifactId>qn-worksite-face</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>qn-worksite-face</name>
+    <description>qn-worksite-face</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <apache.common.version>2.6</apache.common.version>
+        <github.global.server>github</github.global.server>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>qingning</id>
+            <name>qingning</name>
+            <url>http://192.168.1.137:8081/repository/qingning/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>mvn-repo</id>
+            <url>https://raw.github.com/huangsx0512/mvn-repo/master</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+
+    </repositories>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.2.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>-->
+        <!--Apache 通用工具包-->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${apache.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache.common.version}</version>
+        </dependency>
+        <!--JSON解析 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
+        </dependency>
+        <!-- 阿里云上传文件 -->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+
+        <!-- 阿里短信 -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>3.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.1.4.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>qn-worksite-face</finalName>
+        <resources>
+            <resource>
+                <targetPath>${project.build.directory}/classes</targetPath>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <classesDirectory>target/classes/</classesDirectory>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.tsingning.worksite.face.Application</mainClass>
+                            <!-- 打包时 MANIFEST.MF文件不记录的时间戳版本 -->
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <type>jar</type>
+                            <includeTypes>jar</includeTypes>
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <outputDirectory>
+                                ${project.build.directory}/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 不同环境的配置文件选择 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <!-- 指定resources插件处理哪个目录下的资源文件 -->
+                                    <directory>src/main/resources/conf/${profiles.active}</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                        <inherited></inherited>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--将jar打包到本地-->
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+                </configuration>
+            </plugin>
+            <!--上传到github-->
+            <plugin>
+            <groupId>com.github.github</groupId>
+            <artifactId>site-maven-plugin</artifactId>
+            <version >0.12</version>
+            <configuration>
+                <message >Maven artifacts for ${project.version}</message>
+                <noJekyll>true</noJekyll>
+                <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory><!--本地jar地址-->
+                <branch>refs/heads/master</branch><!--分支的名称-->
+                <merge>true</merge>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <repositoryName>mvn-repo</repositoryName><!--对应github上创建的仓库名称 name-->
+                <repositoryOwner>huangsx0512</repositoryOwner><!--github 仓库所有者即登录用户名-->
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>site</goal>
+                    </goals>
+                    <phase>deploy</phase>
+                </execution>
+            </executions>
+        </plugin>
+
+        </plugins>
+
+    </build>
+
+    <!-- 不同环境的配置文件选择 -->
+    <profiles>
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>pro</id>
+            <properties>
+                <profiles.active>pro</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
